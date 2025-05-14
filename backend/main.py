@@ -11,7 +11,7 @@ from utils.search import search_recipes, recommend_recipes
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update this in production
+    allow_origins=["https://recipe-recommendation-mu.vercel.app/"],  # Update this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
