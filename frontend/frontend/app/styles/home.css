@@ -1,0 +1,53 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
+
+/* 🍃 Enchanted Header */
+.enchanted-title {
+  font-family: 'Cinzel Decorative', cursive;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  color: #f6e591;
+}
+
+/* 🌸 Search Bar */
+.search-bar {
+  width: 100%;
+  max-width: 32rem;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  border: 2px solid #A88D83;
+  background: transparent;
+  color: #e8dee9;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.search-bar:focus {
+  outline: none;
+  ring: 2px solid #c3b8b4;
+}
+
+/* 🥗 Filter Buttons */
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filter-btn.active-all {
+  background-color: #3f5579; /* blue */
+  color: white;
+}
+
+.filter-btn.active-veg {
+  background-color: #0a4921; /* green */
+  color: white;
+}
+
+.filter-btn.active-nonveg {
+  background-color: #651414; /* red */
+  color: white;
+}
+
+.filter-btn.inactive {
+  background-color: #98b0e1; /* gray */
+  color: #2D1E2F;
+}

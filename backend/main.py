@@ -1,46 +1,41 @@
-from fastapi import FastAPI, HTTPException, Query, Depends
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-import json
-import pickle
 import os
 import pandas as pd
-import numpy as np
-from backend.utils.search import search_recipes, recommend_recipes
+from utils.search import search_recipes, recommend_recipes
 
 # 📌 Initialize FastAPI
 app = FastAPI()
 
-# ✅ Enable CORS (For frontend communication)
+# ✅ Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update for production
+    allow_origins=["http://localhost:3000"],  # Update this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 🔐 Security (Password Hashing + JWT)
+# 🔐 Password hashing & JWT
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# 📌 In-Memory User Database (For Authentication)
+# 🧠 In-memory user DB
 users_db = {}
 
-# 📌 Load Recipes Dataset
-file_path = os.path.join(os.path.dirname(__file__), "data", "recipes_updated.csv")
+# 📂 Load recipes
+file_path = os.path.join(os.path.dirname(__file__), "data", "combined_updated_recipe_dataset.csv")
 df = pd.read_csv(file_path)
-
-# ✅ Convert DataFrame to list of recipe dictionaries
 recipes = df.to_dict(orient="records")
 
-# 📌 Pydantic Models
+# 🧱 Pydantic Models
 class UserRegister(BaseModel):
     username: str
     password: str
@@ -58,7 +53,7 @@ class CommentRequest(BaseModel):
 class SearchRequest(BaseModel):
     query: str
 
-# 🔐 Security Functions
+# 🔐 Auth helpers
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
@@ -78,32 +73,41 @@ def decode_access_token(token: str):
     except JWTError:
         return None
 
-# 📌 API Endpoints
+# 🌐 API Routes
 
-## User Registration
 @app.post("/register")
 def register(user: UserRegister):
     if user.username in users_db:
         raise HTTPException(status_code=400, detail="Username already exists")
-    
     users_db[user.username] = hash_password(user.password)
     return {"message": "User registered successfully"}
 
-## User Login
 @app.post("/login")
 def login(user: UserLogin):
     if user.username not in users_db or not verify_password(user.password, users_db[user.username]):
         raise HTTPException(status_code=400, detail="Invalid username or password")
-
     token = create_access_token({"sub": user.username})
     return {"access_token": token, "token_type": "bearer"}
+##ctrl z if something happen wrong
+from fastapi import Query
+from typing import List
 
-## Get All Recipes
 @app.get("/recipes")
-def get_recipes():
-    return recipes  
+def get_recipes(
+    category: str = Query(default="all"),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1)
+):
+    filtered = recipes
 
-## Like/Dislike Recipe
+    if category == "veg":
+        filtered = [r for r in recipes if r.get("category") == "veg"]
+    elif category == "non-veg":
+        filtered = [r for r in recipes if r.get("category") == "non-veg"]
+
+    return filtered[skip : skip + limit]
+
+
 @app.post("/recipes/{recipe_id}/vote")
 def vote_recipe(recipe_id: int, vote: VoteRequest):
     for recipe in recipes:
@@ -115,7 +119,6 @@ def vote_recipe(recipe_id: int, vote: VoteRequest):
             return recipe
     raise HTTPException(status_code=404, detail="Recipe not found")
 
-## Comment on Recipe
 @app.post("/recipes/{recipe_id}/comment")
 def comment_recipe(recipe_id: int, comment: CommentRequest):
     for recipe in recipes:
@@ -124,17 +127,14 @@ def comment_recipe(recipe_id: int, comment: CommentRequest):
             return recipe
     raise HTTPException(status_code=404, detail="Recipe not found")
 
-## 🔍 Search Recipes
 @app.post("/search")
 def search(search_request: SearchRequest):
     return search_recipes(search_request.query)
 
-## 🔄 Recommend Recipes
 @app.get("/recommend/{recipe_id}")
 def recommend(recipe_id: int):
     return recommend_recipes(recipe_id)
 
-# 📌 Root Route
 @app.get("/")
 def home():
     return {"message": "Welcome to the Recipe Recommendation API!"}
