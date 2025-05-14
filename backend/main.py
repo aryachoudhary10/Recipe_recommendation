@@ -8,11 +8,7 @@ from datetime import datetime, timedelta
 import os
 import pandas as pd
 from utils.search import search_recipes, recommend_recipes
-
-# 📌 Initialize FastAPI
 app = FastAPI()
-
-# ✅ Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # Update this in production
@@ -20,22 +16,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# 🔐 Password hashing & JWT
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-# 🧠 In-memory user DB
 users_db = {}
 
-# 📂 Load recipes
 file_path = os.path.join(os.path.dirname(__file__), "data", "combined_updated_recipe_dataset.csv")
 df = pd.read_csv(file_path)
 recipes = df.to_dict(orient="records")
 
-# 🧱 Pydantic Models
 class UserRegister(BaseModel):
     username: str
     password: str
@@ -53,7 +43,6 @@ class CommentRequest(BaseModel):
 class SearchRequest(BaseModel):
     query: str
 
-# 🔐 Auth helpers
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
@@ -73,8 +62,6 @@ def decode_access_token(token: str):
     except JWTError:
         return None
 
-# 🌐 API Routes
-
 @app.post("/register")
 def register(user: UserRegister):
     if user.username in users_db:
@@ -88,7 +75,7 @@ def login(user: UserLogin):
         raise HTTPException(status_code=400, detail="Invalid username or password")
     token = create_access_token({"sub": user.username})
     return {"access_token": token, "token_type": "bearer"}
-##ctrl z if something happen wrong
+
 from fastapi import Query
 from typing import List
 

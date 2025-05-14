@@ -92,22 +92,22 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center ">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Welcome Back! 👋</h2>
+      <div className="p-8 rounded-lg shadow-lg w-96">
+        <h2 className="text-2xl font-bold text-center text-white mb-4">Welcome Back! 👋</h2>
         
         {error && <p className="text-red-500 text-sm text-center mb-3">{error}</p>}
 
         <input
           type="text"
           placeholder="Username"
-          className="w-full p-2 mb-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 mb-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 placeholder:text-gray-200"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 mb-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 mb-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 placeholder:text-gray-200"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

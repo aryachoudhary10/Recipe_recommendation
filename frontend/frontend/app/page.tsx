@@ -110,23 +110,27 @@ export default function Home() {
   return (
     <div className="flex min-h-screen text-[#2D1E2F] transition-all duration-300">
       {/* 📌 Sidebar */}
-      <aside className="fixed top-25 left-4 w-64 p-4 bg-[#F8F4F0] shadow-lg border-2 border-[#D4C0B5] rounded-xl z-20">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-[#2D1E2F]">🧝‍♂️ Enchanted User</h2>
-          <p className="text-sm text-[#2D1E2F]/70">Welcome back, traveler!</p>
-        </div>
-        <button
-          onClick={() => setShowLikedOnly(!showLikedOnly)}
-          className="w-full bg-[#A88D83] text-white py-2 px-3 rounded hover:bg-[#8C6D63] transition cursor-pointer"
-        >
-          {showLikedOnly ? "Show All Recipes" : "View Liked Recipes ❤️"}
-        </button>
-      </aside>
+       <aside
+    className="hidden lg:block fixed top-24 left-4 w-64 p-4 bg-[#F8F4F0] shadow-lg border-2 border-[#D4C0B5] rounded-xl z-20"
+  >
+    <div className="mb-4">
+      <h2 className="text-lg font-semibold text-[#2D1E2F]">🧝‍♂️ Enchanted User</h2>
+      <p className="text-sm text-[#2D1E2F]/70">Welcome back, traveler!</p>
+    </div>
+    <button
+      onClick={() => setShowLikedOnly(!showLikedOnly)}
+      className="w-full bg-[#A88D83] text-white py-2 px-3 rounded hover:bg-[#8C6D63] transition cursor-pointer"
+    >
+      {showLikedOnly ? "Show All Recipes" : "View Liked Recipes ❤️"}
+    </button>
+  </aside>  
 
       {/* 📜 Main Section */}
-      <div className="ml-69 flex flex-col flex-grow">
+      {/* <div className="ml-69 flex flex-col flex-grow"> */}
+      <div className="flex-grow lg:ml-60 w-full mx-auto max-w-full ">
+       {/* <div className="flex flex-col flex-grow w-full lg:ml-64 p-8 gap-4"> */}
         <header className="text-center py-1">
-          <h1 className="text-5xl drop-shadow-lg enchanted-title">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl drop-shadow-lg enchanted-title">
             🍃 Enchanted Recipe Book 🍵
           </h1>
         </header>
@@ -135,7 +139,7 @@ export default function Home() {
         <SearchBar onSearch={(query) => setSearch(query)} />
 
         {/* Filter Toggle */}
-        <div className="flex justify-center mb-6 space-x-4">
+        <div className="flex flex-wrap justify-center mb-6 gap-3 px-4">
           {["all", "veg", "non-veg"].map((type) => (
             <button
               key={type}

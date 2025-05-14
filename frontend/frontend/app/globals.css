@@ -18,3 +18,32 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .animate-float {
+    animation: float 8s ease-in-out infinite; /* Slower animation on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .animate-float {
+    animation: float 10s ease-in-out infinite; /* Even slower on very small screens */
+  }
+
+  /* Optional: Reduce movement for smaller screens */
+  @keyframes float {
+    0% {
+      transform: translateY(0px) rotate(0deg);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(-10px) rotate(10deg); /* Smaller float on mobile */
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0px) rotate(0deg);
+      opacity: 0.8;
+    }
+  }
+}
