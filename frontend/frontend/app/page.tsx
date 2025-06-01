@@ -53,13 +53,15 @@ export default function Home() {
     try {
       const baseUrl =
         filter === "all"
-          ? `https://recipe-recommendation-mu.vercel.app/recipes?skip=${page * LIMIT}&limit=${LIMIT}`
-          : `https://recipe-recommendation-mu.vercel.app/recipes?category=${filter}&skip=${page * LIMIT}&limit=${LIMIT}`;
+          // ? `http://localhost:8000/recipes?skip=${page * LIMIT}&limit=${LIMIT}`
+          // : `http://localhost:8000/recipes?category=${filter}&skip=${page * LIMIT}&limit=${LIMIT}`;
+           ? `http://127.0.0.1:8000/recipes?skip=${page * LIMIT}&limit=${LIMIT}`
+          : `http://127.0.0.1:8000/recipes?category=${filter}&skip=${page * LIMIT}&limit=${LIMIT}`;
 
       const response =
         search.trim().length === 0
           ? await axios.get(baseUrl)
-          : await axios.post("https://recipe-recommendation-mu.vercel.app/search", { query: search });
+          : await axios.post("http://127.0.0.1:8000/search", { query: search });
 
       let data = response.data;
 
